@@ -1,6 +1,7 @@
 import 'package:chat/Views/conversation.dart';
 import 'package:chat/Widgets/appbarWidget.dart';
 import 'package:chat/helper/Constant.dart';
+import 'package:chat/helper/helperfunction.dart';
 import 'package:chat/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,24 +16,34 @@ class _SearchState extends State<Search> {
   TextEditingController username=new TextEditingController();
   QuerySnapshot qsearch;
   initsearch(){
-    dbmethod.getUserByUsername(username.text).then((val){
-      setState(() {
-        qsearch=val;
+    if(username.text!=Constants.myname){
+      dbmethod.getUserByUsername(username.text).then((val){
+        setState(() {
+          qsearch=val;
+        });
       });
-    });
+    }else{
+      print("Naam dusra daal ke search kar");
+    }
+
   }
 
   //create char room and send user to conversation screen push replacement
   createChatRoomsendConversation({String userName}){
-    List<String> users =[userName,Constants.myname];
-    String chatroomID=getChatRoomID(userName, Constants.myname);
-    Map<String,dynamic> chatroommap={
-      "users": users,
-      "chatroomId": chatroomID,
-    };
-    DatabaseMethods().createChatRoom(chatroomID, chatroommap);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context)=> ConversationScreen()));
+    if(userName!=HelperFunctions.getuserNameSharedPreference()){
+      List<String> users =[userName,Constants.myname];
+      String chatroomID=getChatRoomID(userName, Constants.myname);
+      Map<String,dynamic> chatroommap={
+        "users": users,
+        "chatroomId": chatroomID,
+      };
+      DatabaseMethods().createChatRoom(chatroomID, chatroommap);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context)=> ConversationScreen(
+            chatRoomID: chatroomID,
+          )));
+    }
+
   }
 
 
