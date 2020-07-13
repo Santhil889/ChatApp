@@ -110,6 +110,7 @@ class ChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+
       onTap: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=> ConversationScreen(chatRoomID: chatRoomID,)));
       },

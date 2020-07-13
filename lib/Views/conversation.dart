@@ -1,6 +1,7 @@
 import 'package:chat/Widgets/appbarWidget.dart';
 import 'package:chat/helper/Constant.dart';
 import 'package:chat/services/database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ConversationScreen extends StatefulWidget {
@@ -18,18 +19,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController message=new TextEditingController();
   DatabaseMethods dbmethod= new DatabaseMethods();
   Widget ChatMessageList(){
-    return StreamBuilder(
-      stream: chatStream,
-      builder: (context,snapshot){
-        return snapshot.hasData ? ListView.builder(
-            controller: controller,
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context,index){
-              return MessageTile(message: snapshot.data.documents[index].data["message"],
-              issentbyme: snapshot.data.documents[index].data["sentBy"]==Constants.myname,);
-            }) : Container();
-      },
+    return Container(
+      margin: EdgeInsets.only(bottom: 80),
+      child: StreamBuilder(
 
+          stream: chatStream,
+          builder: (context,snapshot){
+            return snapshot.hasData ? ListView.builder(
+              reverse: true,
+                controller: controller,
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context,index){
+                  return MessageTile(message: snapshot.data.documents[index].data["message"],
+                  issentbyme: snapshot.data.documents[index].data["sentBy"]==Constants.myname,);
+                }) : Container();
+          },
+
+        ),
     );
   }
 
@@ -41,7 +47,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
         "time" : DateTime.now().millisecondsSinceEpoch,
       };
       dbmethod.addConverstionMessages(widget.chatRoomID, msgmap);
-      controller.jumpTo(controller.position.maxScrollExtent);
       message.clear();
     }
   }
