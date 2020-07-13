@@ -33,17 +33,3 @@ TextStyle mediumtextstyle(){
     fontSize: 17,
   );
 }
-//TIMEPASS
-BoxDecoration sentbymeDecoration(){
-  return BoxDecoration(
-    borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40),bottomLeft: Radius.circular(40)),
-    color: Colors.blue,
-  );
-}
-
-BoxDecoration sentbyotherDecoration(){
-  return BoxDecoration(
-    borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40),bottomRight: Radius.circular(40)),
-    color: Colors.black26,
-  );
-}

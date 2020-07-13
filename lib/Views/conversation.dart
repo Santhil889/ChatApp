@@ -13,6 +13,7 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
+  ScrollController controller= new ScrollController();
   Stream chatStream;
   TextEditingController message=new TextEditingController();
   DatabaseMethods dbmethod= new DatabaseMethods();
@@ -21,6 +22,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       stream: chatStream,
       builder: (context,snapshot){
         return snapshot.hasData ? ListView.builder(
+            controller: controller,
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context,index){
               return MessageTile(message: snapshot.data.documents[index].data["message"],
@@ -39,6 +41,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         "time" : DateTime.now().millisecondsSinceEpoch,
       };
       dbmethod.addConverstionMessages(widget.chatRoomID, msgmap);
+      controller.jumpTo(controller.position.maxScrollExtent);
       message.clear();
     }
   }
@@ -57,7 +60,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(context),
+      appBar: AppBar(
+          title: Text("${widget.chatRoomID.toString().replaceAll("_", "").replaceAll(Constants.myname, "")}")
+      ),
       body: Container(
         child: Stack(
           children: [
